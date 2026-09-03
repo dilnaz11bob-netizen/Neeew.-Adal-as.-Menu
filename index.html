@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAL-AS — Онлайн меню</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg-cream: #F7F3EE;
+      --card-bg: #FFFFFF;
+      --dark-green: #0A3225;
+      --accent-gold: #D4AF37;
+      --accent-gold-light: #E6C875;
+      --light-beige: #F3E5D8;
+      --text-dark: #1A2621;
+      --text-gray: #7A8A84;
+      --accent-green: #25D366;
+      --border-color: #E8DEC8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      max-width: 500px;
+      margin: 0 auto;
+      box-shadow: 0 0 35px rgba(10, 50, 37, 0.15);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Приветственный экран */
+    #welcomeScreen {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      height: 100vh;
+      background: radial-gradient(circle, #0F4534 0%, var(--dark-green) 100%);
+      color: var(--light-beige);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 24px;
+      z-index: 1000;
+      text-align: center;
+    }
+
+    .brand-ornament { 
+      font-size: 32px; 
+      color: var(--accent-gold); 
+      margin-bottom: 12px;
+      letter-spacing: 6px;
+    }
+
+    .brand-title { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 44px; 
+      font-weight: 700; 
+      letter-spacing: 5px; 
+      color: var(--light-beige); 
+      text-transform: uppercase;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .brand-subtitle { 
+      font-size: 12px; 
+      letter-spacing: 6px; 
+      color: var(--accent-gold); 
+      margin: 8px 0 20px; 
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 50%, var(--accent-gold) 100%);
+      color: var(--dark-green);
+      border: none;
+      padding: 16px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 25px;
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-start:active {
+      transform: scale(0.98);
+    }
+
+    #mainContent { display: none; padding-bottom: 110px; }
+
+    /* Шапка сайта */
+    header {
+      text-align: center;
+      padding: 24px 20px 14px;
+      background: var(--dark-green);
+      color: var(--light-beige);
+      position: relative;
+    }
+
+    .header-ornament {
+      color: var(--accent-gold);
+      font-size: 16px;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+    }
+
+    .logo { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 34px; 
+      font-weight: 700; 
+      color: var(--light-beige); 
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    /* Поиск */
+    .search-container {
+      background: var(--dark-green);
+      padding: 8px 16px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 12;
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 13px 44px 13px 44px;
+      border-radius: 30px;
+      border: 1.5px solid var(--accent-gold);
+      background: #FFFFFF;
+      font-size: 14px;
+      outline: none;
+      color: var(--text-dark);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+      transition: border-color 0.2s ease;
+    }
+
+    .search-input::placeholder {
+      color: #8C9994;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-gold-light);
+      box-shadow: 0 4px 18px rgba(212, 175, 55, 0.25);
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: #8C9994;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .clear-search-btn:hover {
+      color: var(--dark-green);
+      background: rgba(0,0,0,0.05);
+    }
+
+    /* Категории */
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 12px 16px 16px;
+      background: var(--dark-green);
+      position: sticky;
+      top: 61px;
+      z-index: 11;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .categories::-webkit-scrollbar { display: none; }
+
+    .cat-btn {
+      background: transparent;
+      color: var(--light-beige);
+      border: 1px solid var(--accent-gold);
+      padding: 8px 18px;
+      border-radius: 22px;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cat-btn.active {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+      color: var(--dark-green);
+      font-weight: 700;
+      border-color: var(--accent-gold);
+      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Карточки блюд */
+    .menu-container { padding: 18px 16px; }
+
+    .menu-item {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(10, 50, 37, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-item::before {
+      content: "❖";
+      position: absolute;
+      top: -6px;
+      right: 12px;
+      font-size: 18px;
+      color: rgba(212, 175, 55, 0.15);
+      pointer-events: none;
+    }
+
+    .item-info { flex: 1; padding-right: 12px; }
+
+    .item-category-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .item-category-tag::before {
+      content: "◇";
+      font-size: 9px;
+    }
+
+    .item-name { 
+      font-size: 16px; 
+      font-weight: 700; 
+      color: var(--text-dark); 
+      margin-bottom: 4px; 
+    }
+
+    .item-keywords {
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .item-price { 
+      color: var(--dark-green); 
+      font-weight: 700; 
+      font-size: 18px; 
+      font-family: 'Cormorant Garamond', serif; 
+    }
+
+    .btn-add {
+      background: var(--dark-green);
+      color: var(--light-beige);
+      border: 1px solid var(--accent-gold);
+      padding: 9px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(10, 50, 37, 0.15);
+    }
+
+    .btn-add:active {
+      transform: scale(0.95);
+    }
+
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-cream);
+      border: 1px solid var(--accent-gold);
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .btn-cnt { 
+      background: transparent; 
+      border: none; 
+      color: var(--dark-green); 
+      font-size: 18px; 
+      font-weight: bold; 
+      cursor: pointer; 
+    }
+
+    /* Нижняя панель */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background: var(--dark-green);
+      border-top: 2px solid var(--accent-gold);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+    }
+
+    .bar-text { font-size: 12px; color: var(--light-beige); }
+    .bar-total { font-size: 22px; font-weight: 700; color: var(--accent-gold); font-family: 'Cormorant Garamond', serif; }
+
+    .btn-cart {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+      color: var(--dark-green);
+      border: none;
+      padding: 11px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Модальное окно */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 50, 37, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: var(--bg-cream);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-top: 3px solid var(--accent-gold);
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .modal-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      color: var(--dark-green);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .input-field {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      padding: 13px 16px;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-green);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 15px;
+      margin-top: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-close {
+      width: 100%;
+      background: transparent;
+      color: var(--text-gray);
+      border: none;
+      padding: 12px;
+      margin-top: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .container-fee-note {
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-top: 10px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Экран приветствия -->
+  <div id="welcomeScreen">
+    <div class="brand-ornament">❖ ◈ ❖</div>
+    <div class="brand-title">ADAL-AS</div>
+    <div class="brand-subtitle">КАФЕ / КӘФЕСІ</div>
+    <button class="btn-start" onclick="enterMenu()">Начать заказ</button>
+  </div>
+
+  <!-- Главный интерфейс -->
+  <div id="mainContent">
+    <header>
+      <div class="header-ornament">❖ ◈ ❖</div>
+      <div class="logo">Адал ас</div>
+    </header>
+
+    <!-- Поиск -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Поиск (напр. баклажан, чай, кола)..." oninput="handleSearch()">
+        <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()" title="Очистить поиск">✖</button>
+      </div>
+    </div>
+
+    <div class="categories" id="categoryList"></div>
+    <div class="menu-container" id="menu"></div>
+
+    <div class="bottom-bar" id="bottomBar" style="display: none;">
+      <div>
+        <div class="bar-text">Выбрано: <span id="cartCount">0</span> поз.</div>
+        <div class="bar-total" id="cartTotal">0 ₸</div>
+      </div>
+      <button class="btn-cart" onclick="openCart()">Посмотреть корзину</button>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="cartModal">
+      <div class="modal-content" id="modalStep1">
+        <div class="modal-header">
+          <h3>Ваша корзина</h3>
+          <button style="color: #D9534F; background:none; border:none; cursor:pointer; font-weight:600;" onclick="clearCart()">Очистить</button>
+        </div>
+        <div id="cartList"></div>
+        <div class="container-fee-note" id="containerFeeNote"></div>
+        <div style="margin-top: 15px; text-align: right; font-weight: bold; font-size: 22px; color: var(--dark-green); font-family: 'Cormorant Garamond', serif;" id="cartModalTotal"></div>
+        <button class="btn-submit" style="background: var(--dark-green);" onclick="goToCheckout()">Перейти к оформлению</button>
+        <button class="btn-close" onclick="closeCart()">Продолжить выбор</button>
+      </div>
+
+      <div class="modal-content" id="modalStep2" style="display: none;">
+        <div class="modal-header">
+          <h3>Детали доставки</h3>
+        </div>
+        <input type="text" id="street" class="input-field" placeholder="Улица и номер дома *">
+        <input type="text" id="flat" class="input-field" placeholder="Квартира / офис / подъезд *">
+        <input type="text" id="floor" class="input-field" placeholder="Этаж *">
+        <input type="text" id="comment" class="input-field" placeholder="Комментарий к заказу">
+        
+        <button class="btn-submit" onclick="sendToWhatsApp()">💬 Отправить в WhatsApp</button>
+        <button class="btn-close" onclick="backToCart()">Назад в корзину</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PHONE_NUMBER = "77083653128";
+    const CONTAINER_PRICE = 100;
+
+    let cart = {};
+    let activeCategory = "Все";
+
+    function enterMenu() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      renderCategories();
+      renderMenu();
+    }
+
+    const products = [
+      // ЗАВТРАКИ
+      { id: 1, category: "Завтраки", name: "Каша манная", price: 1000, keywords: ["каша", "манная", "манка"] },
+      { id: 2, category: "Завтраки", name: "Каша рисовая", price: 1000, keywords: ["каша", "рисовая", "рис"] },
+      { id: 3, category: "Завтраки", name: "Каша овсяная", price: 1000, keywords: ["каша", "овсяная", "геркулес"] },
+      { id: 4, category: "Завтраки", name: "Каша овсяная с ягодами", price: 1500, keywords: ["каша", "овсяная", "ягоды"] },
+      { id: 5, category: "Завтраки", name: "Каша овсяная со сливками", price: 1500, keywords: ["каша", "овсяная", "сливки"] },
+      { id: 6, category: "Завтраки", name: "Блины со сметаной", price: 1000, keywords: ["блины", "сметаной", "блинчики"] },
+      { id: 7, category: "Завтраки", name: "Блины со сгущенкой", price: 1000, keywords: ["блины", "сгущенкой", "сладкое"] },
+      { id: 8, category: "Завтраки", name: "Блины с ягодами", price: 1200, keywords: ["блины", "ягодами", "сладкое"] },
+      { id: 9, category: "Завтраки", name: "Блины с грибами в сливочном соусе", price: 1600, keywords: ["блины", "грибы", "сливки"] },
+      { id: 10, category: "Завтраки", name: "Омлет с овощами", price: 1400, keywords: ["омлет", "овощи", "яйцо"] },
+      { id: 11, category: "Завтраки", name: "Омлет с колбасой", price: 1400, keywords: ["омлет", "колбаса", "яйцо"] },
+      { id: 12, category: "Завтраки", name: "Яичница", price: 1000, keywords: ["яичница", "яйцо", "глазунья"] },
+      { id: 13, category: "Завтраки", name: "Классический завтрак", price: 1800, keywords: ["завтрак", "яйцо", "колбаса"] },
+      { id: 14, category: "Завтраки", name: "Шакшука", price: 1800, keywords: ["шакшука", "яйцо", "томаты"] },
+
+      // САЛАТЫ
+      { id: 15, category: "Салаты", name: "Адал ас", price: 2500, keywords: ["салат", "фирменный", "мясо"] },
+      { id: 16, category: "Салаты", name: "Рулет из баклажанов", price: 2500, keywords: ["баклажан", "рулетики", "овощи"] },
+      { id: 17, category: "Салаты", name: "Хрустящий баклажан", price: 2200, keywords: ["баклажан", "хрустящий", "овощи"] },
+      { id: 18, category: "Салаты", name: "Пекинский", price: 2800, keywords: ["салат", "капуста", "мясо"] },
+      { id: 19, category: "Салаты", name: "Цезарь с курицей", price: 2300, keywords: ["цезарь", "курица", "сыр"] },
+      { id: 20, category: "Салаты", name: "Цезарь с семгой", price: 2700, keywords: ["цезарь", "семга", "рыба"] },
+      { id: 21, category: "Салаты", name: "Греческий", price: 2000, keywords: ["греческий", "фета", "огурцы"] },
+      { id: 22, category: "Салаты", name: "Оливье", price: 1800, keywords: ["оливье", "майонез", "колбаса"] },
+      { id: 23, category: "Салаты", name: "Малибу", price: 1800, keywords: ["малибу", "курица", "сыр"] },
+      { id: 24, category: "Салаты", name: "Гнездо", price: 1800, keywords: ["гнездо", "картофель пай", "курица"] },
+      { id: 25, category: "Салаты", name: "Свежий", price: 1800, keywords: ["свежий", "огурцы", "помидоры"] },
+      { id: 26, category: "Салаты", name: "Ачучук", price: 1800, keywords: ["ачучук", "помидоры", "лук"] },
+      { id: 27, category: "Салаты", name: "Витаминка", price: 1500, keywords: ["витаминка", "капуста", "морковь"] },
+      { id: 28, category: "Салаты", name: "Кавказская нарезка", price: 3000, keywords: ["нарезка", "овощи", "сыр"] },
+      { id: 29, category: "Салаты", name: "Ашлян-фу (салат)", price: 2500, keywords: ["ашлян-фу", "лапша", "крахмал"] },
+
+      // ПЕРВЫЕ БЛЮДА
+      { id: 30, category: "Первые блюда", name: "Сорпа из баранины", price: 2000, keywords: ["сорпа", "суп", "баранина"] },
+      { id: 31, category: "Первые блюда", name: "Сорпа из говядины", price: 2000, keywords: ["сорпа", "суп", "говядина"] },
+      { id: 32, category: "Первые блюда", name: "Солянка", price: 2300, keywords: ["солянка", "суп", "колбаса"] },
+      { id: 33, category: "Первые блюда", name: "Чечевичный суп", price: 1800, keywords: ["суп", "чечевица", "пюре"] },
+      { id: 34, category: "Первые блюда", name: "Сырный суп", price: 2000, keywords: ["суп", "сыр", "сливки"] },
+      { id: 35, category: "Первые блюда", name: "Грибной суп", price: 2000, keywords: ["суп", "грибы", "шампиньоны"] },
+      { id: 36, category: "Первые блюда", name: "Пельмени", price: 1900, keywords: ["пельмени", "суп", "мясо"] },
+      { id: 37, category: "Первые блюда", name: "Окрошка с мясом", price: 2000, keywords: ["окрошка", "кефир", "мясо"] },
+      { id: 38, category: "Первые блюда", name: "Лапша по-домашнему", price: 1600, keywords: ["лапша", "суп", "курица"] },
+      { id: 39, category: "Первые блюда", name: "Мампар", price: 1900, keywords: ["мампар", "суп", "клецки"] },
+      { id: 40, category: "Первые блюда", name: "Том-ям из курицы", price: 3000, keywords: ["том-ям", "суп", "курица"] },
+      { id: 41, category: "Первые блюда", name: "Том-ям из морепродуктов", price: 3500, keywords: ["том-ям", "креветки", "морепродукты"] },
+      { id: 42, category: "Первые блюда", name: "Рамен", price: 2000, keywords: ["рамен", "лапша", "яйцо"] },
+      { id: 43, category: "Первые блюда", name: "Китайские пельмени", price: 2000, keywords: ["пельмени", "дамплинги"] },
+      { id: 44, category: "Первые блюда", name: "Кукси", price: 2500, keywords: ["кукси", "лапша", "холодный суп"] },
+
+      // ВТОРЫЕ БЛЮДА
+      { id: 45, category: "Вторые блюда", name: "Адал ас", price: 3500, keywords: ["фирменное", "мясо"] },
+      { id: 46, category: "Вторые блюда", name: "Плов по-ташкентски", price: 2200, keywords: ["плов", "рис", "говядина"] },
+      { id: 47, category: "Вторые блюда", name: "Манты", price: 2000, keywords: ["манты", "мясо", "пар"] },
+      { id: 48, category: "Вторые блюда", name: "Манты с тыквой (по сезону)", price: 2000, keywords: ["манты", "тыква"] },
+      { id: 49, category: "Вторые блюда", name: "Бешпармак", price: 3500, keywords: ["бешпармак", "мясо", "тесто"] },
+      { id: 50, category: "Вторые блюда", name: "Фрикасе", price: 2500, keywords: ["фрикасе", "курица", "сливки"] },
+      { id: 51, category: "Вторые блюда", name: "Телятина в сливочном соусе", price: 2800, keywords: ["телятина", "сливки"] },
+      { id: 52, category: "Вторые блюда", name: "Паста фетучини", price: 2500, keywords: ["паста", "фетучини", "макароны"] },
+      { id: 53, category: "Вторые блюда", name: "Паста с телятиной", price: 2700, keywords: ["паста", "телятина"] },
+      { id: 54, category: "Вторые блюда", name: "Паста с семгой", price: 3000, keywords: ["паста", "семга", "рыба"] },
+      { id: 55, category: "Вторые блюда", name: "Куырдак из баранины", price: 3900, keywords: ["куырдак", "баранина", "картошка"] },
+      { id: 56, category: "Вторые блюда", name: "Тушеные ребра говяжьи", price: 4000, keywords: ["ребра", "говядина"] },
+      { id: 57, category: "Вторые блюда", name: "Запеченые окорочка", price: 2000, keywords: ["окорочка", "курица"] },
+      { id: 58, category: "Вторые блюда", name: "Картофель по-домашнему", price: 2300, keywords: ["картофель", "жареный", "мясо"] },
+      { id: 59, category: "Вторые блюда", name: "Мясо по-венгерски", price: 2500, keywords: ["мясо", "соус"] },
+      { id: 60, category: "Вторые блюда", name: "Бифштекс с гарниром", price: 2500, keywords: ["бифштекс", "котлета", "яйцо"] },
+      { id: 61, category: "Вторые блюда", name: "Котлеты с гарниром", price: 2200, keywords: ["котлеты", "фарш"] },
+      { id: 62, category: "Вторые блюда", name: "Котлеты под сыром", price: 2500, keywords: ["котлеты", "сыр"] },
+
+      // ГАРНИРЫ
+      { id: 63, category: "Гарниры", name: "Фри", price: 1000, freeContainer: true, keywords: ["картофель", "фри"] },
+      { id: 64, category: "Гарниры", name: "Пюре", price: 600, keywords: ["пюре", "картошка"] },
+      { id: 65, category: "Гарниры", name: "Рис", price: 500, keywords: ["рис", "крупа"] },
+      { id: 66, category: "Гарниры", name: "Гречка", price: 500, keywords: ["гречка", "крупа"] },
+
+      // ШАШЛЫК
+      { id: 67, category: "Шашлык", name: "Люля-кебаб", price: 1250, freeContainer: true, keywords: ["люля", "кебаб", "шашлык"] },
+      { id: 68, category: "Шашлык", name: "Из окорочка", price: 900, freeContainer: true, keywords: ["шашлык", "курица", "окорочок"] },
+      { id: 69, category: "Шашлык", name: "Из утиного филе", price: 1350, freeContainer: true, keywords: ["шашлык", "утка", "филе"] },
+      { id: 70, category: "Шашлык", name: "Из крылышек", price: 1300, freeContainer: true, keywords: ["шашлык", "крылышки", "курица"] },
+      { id: 71, category: "Шашлык", name: "Из баранины", price: 1700, freeContainer: true, keywords: ["шашлык", "баранина"] },
+      { id: 72, category: "Шашлык", name: "Антрикот", price: 2200, freeContainer: true, keywords: ["антрикот", "шашлык", "мясо"] },
+      { id: 73, category: "Шашлык", name: "Из бараньих ребрышек", price: 1800, freeContainer: true, keywords: ["шашлык", "ребрышки", "баранина"] },
+      { id: 74, category: "Шашлык", name: "Из шампиньонов", price: 1150, freeContainer: true, keywords: ["шашлык", "грибы", "шампиньоны"] },
+      { id: 75, category: "Шашлык", name: "Овощи на гриле", price: 1500, freeContainer: true, keywords: ["овощи", "гриль", "перец"] },
+
+      // СОУСЫ
+      { id: 76, category: "Соусы", name: "Тартар", price: 200, freeContainer: true, keywords: ["соус", "тартар"] },
+      { id: 77, category: "Соусы", name: "Шашлычный", price: 200, freeContainer: true, keywords: ["соус", "шашлычный", "томатный"] },
+      { id: 78, category: "Соусы", name: "Сметано", price: 200, freeContainer: true, keywords: ["соус", "сметана"] },
+      { id: 79, category: "Соусы", name: "Сырный", price: 400, freeContainer: true, keywords: ["соус", "сырный"] },
+      { id: 80, category: "Соусы", name: "Барбекю", price: 400, freeContainer: true, keywords: ["соус", "барбекю", "bbq"] },
+
+      // СТЕЙКИ
+      { id: 81, category: "Стейки", name: "Стейк Рибай", price: 5000, freeContainer: true, keywords: ["стейк", "рибай", "мясо"] },
+      { id: 82, category: "Стейки", name: "Стейк из семги", price: 5500, freeContainer: true, keywords: ["стейк", "семга", "рыба"] },
+
+      // БЛЮДА НА КОМПАНИЮ
+      { id: 83, category: "Блюда на компанию", name: "Сэт шашлычный", price: 15000, freeContainer: true, keywords: ["сет", "ассорти", "шашлык"] },
+      { id: 84, category: "Блюда на компанию", name: "Дапанджи", price: 10000, keywords: ["дапанджи", "курица", "лапша"] },
+      { id: 85, category: "Блюда на компанию", name: "Плов (большой)", price: 10000, keywords: ["плов", "рис", "мясо"] },
+      { id: 86, category: "Блюда на компанию", name: "Манты (большая порция)", price: 10000, keywords: ["манты", "мясо"] },
+      { id: 87, category: "Блюда на компанию", name: "Куырдак (большой)", price: 16000, keywords: ["куырдак", "баранина"] },
+      { id: 88, category: "Блюда на компанию", name: "Бешпармак (большой)", price: 17000, keywords: ["бешпармак", "конина", "мясо"] },
+
+      // КИТАЙСКАЯ КУХНЯ
+      { id: 89, category: "Китайская кухня", name: "Карын сай", price: 2800, keywords: ["карын сай", "требуха", "острый"] },
+      { id: 90, category: "Китайская кухня", name: "Тебян ру / говядина, черные грибы, перец, лук", price: 3000, keywords: ["тебян ру", "говядина", "грибы"] },
+      { id: 91, category: "Китайская кухня", name: "Тансу жи / курица в кисло-сладком соусе", price: 2800, keywords: ["тансу жи", "курица", "кисло-сладкий", "кисло сладкий", "соус", "курице"] },
+      { id: 92, category: "Китайская кухня", name: "Тебян жи / филе, черные грибы, перец, лук", price: 2800, keywords: ["тебян жи", "филе", "курица"] },
+      { id: 93, category: "Китайская кухня", name: "Тансу и / судак в кисло-сладком соусе", price: 3500, keywords: ["тансу и", "судак", "рыба", "кисло-сладкий", "кисло сладкий"] },
+      { id: 94, category: "Китайская кухня", name: "Казан кебаб", price: 3800, keywords: ["казан кебаб", "мясо", "картошка"] },
+      { id: 95, category: "Китайская кухня", name: "Фри с мясом", price: 2500, keywords: ["фри", "мясо"] },
+      { id: 96, category: "Китайская кухня", name: "Мясо по-тайски", price: 2500, keywords: ["мясо", "тайски", "перец"] },
+      { id: 97, category: "Китайская кухня", name: "Фунчеза", price: 2500, keywords: ["фунчеза", "лапша", "овощи"] },
+      { id: 98, category: "Китайская кухня", name: "Картофель по-китайски", price: 2800, keywords: ["картофель", "китайски"] },
+      { id: 99, category: "Китайская кухня", name: "Тебян янпай / ребра бараньи, черные грибы, перец, лук", price: 3500, keywords: ["тебян янпай", "ребра", "баранина"] },
+      { id: 100, category: "Китайская кухня", name: "Ашлян-фу", price: 2500, keywords: ["ашлян-фу", "лапша", "холодный"] },
+      { id: 101, category: "Китайская кухня", name: "Лазру", price: 3000, keywords: ["лазру", "мясо", "перец"] },
+      { id: 102, category: "Китайская кухня", name: "Бас", price: 5000, keywords: ["бас", "голова", "баранина"] },
+
+      // ЛАГМАН
+      { id: 103, category: "Лагман", name: "Лагман по-домашнему", price: 1800, keywords: ["лагман", "домашний", "лапша"] },
+      { id: 104, category: "Лагман", name: "Гуйру", price: 2200, keywords: ["гуйру", "лагман", "мясо"] },
+      { id: 105, category: "Лагман", name: "Суйру", price: 2200, keywords: ["суйру", "лагман", "мясо"] },
+      { id: 106, category: "Лагман", name: "Цомян", price: 2200, keywords: ["цомян", "жареный лагман"] },
+      { id: 107, category: "Лагман", name: "Могуру (древесные грибы)", price: 2500, keywords: ["могуру", "лагман", "грибы"] },
+      { id: 108, category: "Лагман", name: "Мошуру (грибы вешенки)", price: 2500, keywords: ["мошуру", "лагман", "вешенки"] },
+      { id: 109, category: "Лагман", name: "Жусай ру", price: 2400, keywords: ["жусай", "лагман", "мясо"] },
+      { id: 110, category: "Лагман", name: "Жусай жидан", price: 2000, keywords: ["жусай", "жидан", "яйцо"] },
+      { id: 111, category: "Лагман", name: "Хау-хуа", price: 2200, keywords: ["хау-хуа", "лагман"] },
+      { id: 112, category: "Лагман", name: "Кабырга / бараньи ребра, древесные грибы", price: 3000, keywords: ["кабырга", "ребра", "лагман"] },
+      { id: 113, category: "Лагман", name: "Дин дин", price: 2200, keywords: ["дин дин", "мелкий лагман"] },
+      { id: 114, category: "Лагман", name: "Гуйру ганфан", price: 2000, keywords: ["ганфан", "гуйру", "рис"] },
+      { id: 115, category: "Лагман", name: "Суйру ганфан", price: 1800, keywords: ["ганфан", "суйру", "рис"] },
+      { id: 116, category: "Лагман", name: "Лагман из курицы", price: 2000, keywords: ["лагман", "курица"] },
+      { id: 117, category: "Лагман", name: "Ганбян Цомян", price: 2500, keywords: ["ганбян", "цомян", "жареный"] },
+      { id: 118, category: "Лагман", name: "Лазру (подлив с лапшой)", price: 2500, keywords: ["лазру", "подлив", "лапша"] },
+
+      // ПИЦЦА И ВЫПЕЧКА
+      { id: 119, category: "Пицца и Выпечка", name: "Пицца Маргарита", price: 2000, freeContainer: true, keywords: ["пицца", "маргарита", "сыр"] },
+      { id: 120, category: "Пицца и Выпечка", name: "Пицца Пеперони", price: 2500, freeContainer: true, keywords: ["пицца", "пеперони", "колбаса"] },
+      { id: 121, category: "Пицца и Выпечка", name: "Пицца С курицей и грибами", price: 2800, freeContainer: true, keywords: ["пицца", "курица", "грибы"] },
+      { id: 122, category: "Пицца и Выпечка", name: "Пицца Адал ас", price: 3000, freeContainer: true, keywords: ["пицца", "фирменная", "мясо"] },
+      { id: 123, category: "Пицца и Выпечка", name: "Пицца Болоньеза", price: 3000, freeContainer: true, keywords: ["пицца", "болоньеза", "фарш"] },
+      { id: 124, category: "Пицца и Выпечка", name: "Пицца 4 сезона", price: 3000, freeContainer: true, keywords: ["пицца", "4 сезона", "ассорти"] },
+      { id: 125, category: "Пицца и Выпечка", name: "Хычины с картошкой", price: 2000, freeContainer: true, keywords: ["хычины", "картошка", "лепешка"] },
+      { id: 126, category: "Пицца и Выпечка", name: "Хычины с сыром", price: 2500, freeContainer: true, keywords: ["хычины", "сыр", "лепешка"] },
+      { id: 127, category: "Пицца и Выпечка", name: "Хачапури по-мегрельски", price: 3200, freeContainer: true, keywords: ["хачапури", "сыр", "тесто"] },
+      { id: 128, category: "Пицца и Выпечка", name: "Сырные палочки", price: 1200, freeContainer: true, keywords: ["сырные палочки", "сыр"] },
+      { id: 129, category: "Пицца и Выпечка", name: "Нагетсы", price: 1200, freeContainer: true, keywords: ["нагетсы", "курица"] },
+      { id: 130, category: "Пицца и Выпечка", name: "Баурсак порция", price: 500, freeContainer: true, keywords: ["баурсаки", "хлеб"] },
+      { id: 131, category: "Пицца и Выпечка", name: "Баурсак со сметаной", price: 700, freeContainer: true, keywords: ["баурсаки", "сметана"] },
+      { id: 132, category: "Пицца и Выпечка", name: "Баурсак кг", price: 2000, freeContainer: true, keywords: ["баурсаки", "килограмм"] },
+      { id: 133, category: "Пицца и Выпечка", name: "Хлебная корзина", price: 1000, freeContainer: true, keywords: ["хлеб", "корзина"] },
+      { id: 134, category: "Пицца и Выпечка", name: "Ассорти из выпечки", price: 2800, freeContainer: true, keywords: ["ассорти", "выпечка"] },
+      { id: 135, category: "Пицца и Выпечка", name: "Чак чак", price: 800, freeContainer: true, keywords: ["чак чак", "сладкое", "мед"] },
+      { id: 136, category: "Пицца и Выпечка", name: "Наполеон", price: 1000, freeContainer: true, keywords: ["наполеон", "торт"] },
+      { id: 137, category: "Пицца и Выпечка", name: "Медовик", price: 1000, freeContainer: true, keywords: ["медовик", "торт"] },
+      { id: 138, category: "Пицца и Выпечка", name: "Тары чизкейк", price: 1200, freeContainer: true, keywords: ["чизкейк", "тары", "десерт"] },
+      { id: 139, category: "Пицца и Выпечка", name: "Графские развалины", price: 1200, freeContainer: true, keywords: ["торт", "развалины"] },
+
+      // НАПИТКИ - ЧАЙ
+      { id: 140, category: "Напитки", name: "Черный чай (бокал)", price: 200, freeContainer: true, keywords: ["чай", "черный", "бокал"] },
+      { id: 141, category: "Напитки", name: "Черный чай (чайник)", price: 500, freeContainer: true, keywords: ["чай", "черный", "чайник"] },
+      { id: 142, category: "Напитки", name: "Зеленый чай (бокал)", price: 200, freeContainer: true, keywords: ["чай", "зеленый", "бокал"] },
+      { id: 143, category: "Напитки", name: "Зеленый чай (чайник)", price: 500, freeContainer: true, keywords: ["чай", "зеленый", "чайник"] },
+      { id: 144, category: "Напитки", name: "Чай с молоком (бокал)", price: 250, freeContainer: true, keywords: ["чай", "молоко", "бокал"] },
+      { id: 145, category: "Напитки", name: "Чай с молоком (чайник)", price: 600, freeContainer: true, keywords: ["чай", "молоко", "чайник"] },
+      { id: 146, category: "Напитки", name: "Чай с лимоном (бокал)", price: 250, freeContainer: true, keywords: ["чай", "лимон", "бокал"] },
+      { id: 147, category: "Напитки", name: "Чай с лимоном (чайник)", price: 600, freeContainer: true, keywords: ["чай", "лимон", "чайник"] },
+      { id: 148, category: "Напитки", name: "Ташкентский чай", price: 1800, freeContainer: true, keywords: ["чай", "ташкентский"] },
+      { id: 149, category: "Напитки", name: "Марокканский чай", price: 1800, freeContainer: true, keywords: ["чай", "марокканский"] },
+      { id: 150, category: "Напитки", name: "Чай с облепихой", price: 2000, freeContainer: true, keywords: ["чай", "облепиха"] },
+      { id: 151, category: "Напитки", name: "Чай фруктовый", price: 2000, freeContainer: true, keywords: ["чай", "фруктовый"] },
+      { id: 152, category: "Напитки", name: "Чай с имбирем", price: 1500, freeContainer: true, keywords: ["чай", "имбирь"] },
+      { id: 153, category: "Напитки", name: "Чай по-казахски (с молоком и тары)", price: 1500, freeContainer: true, keywords: ["чай", "казахский", "тары", "молоко"] },
+
+      // НАПИТКИ - ХОЛОДНЫЕ
+      { id: 154, category: "Напитки", name: "Компот 0.5L", price: 400, freeContainer: true, keywords: ["компот", "напиток", "0.5"] },
+      { id: 155, category: "Напитки", name: "Компот 1L", price: 800, freeContainer: true, keywords: ["компот", "напиток", "1l"] },
+      { id: 156, category: "Напитки", name: "Каркаде 0.5L", price: 500, freeContainer: true, keywords: ["каркаде", "напиток", "0.5"] },
+      { id: 157, category: "Напитки", name: "Каркаде 1L", price: 1000, freeContainer: true, keywords: ["каркаде", "напиток", "1l"] },
+      { id: 158, category: "Напитки", name: "Кола 0.5L", price: 600, freeContainer: true, keywords: ["кола", "cola", "0.5"] },
+      { id: 159, category: "Напитки", name: "Кола 1L", price: 900, freeContainer: true, keywords: ["кола", "cola", "1l"] },
+      { id: 160, category: "Напитки", name: "Кола стекло", price: 700, freeContainer: true, keywords: ["кола", "стекло"] },
+      { id: 161, category: "Напитки", name: "Фанта 0.5L", price: 600, freeContainer: true, keywords: ["фанта", "fanta", "0.5"] },
+      { id: 162, category: "Напитки", name: "Фанта 1L", price: 900, freeContainer: true, keywords: ["фанта", "fanta", "1l"] },
+      { id: 163, category: "Напитки", name: "Спрайт 0.5L", price: 600, freeContainer: true, keywords: ["спрайт", "sprite", "0.5"] },
+      { id: 164, category: "Напитки", name: "Спрайт 1L", price: 900, freeContainer: true, keywords: ["спрайт", "sprite", "1l"] },
+      { id: 165, category: "Напитки", name: "Piko 0.5L", price: 700, freeContainer: true, keywords: ["piko", "пико", "сок", "0.5"] },
+      { id: 166, category: "Напитки", name: "Piko 1L", price: 1000, freeContainer: true, keywords: ["piko", "пико", "сок", "1l"] },
+      { id: 167, category: "Напитки", name: "Вода 0.5L", price: 450, freeContainer: true, keywords: ["вода", "0.5"] },
+      { id: 168, category: "Напитки", name: "Вода 1L", price: 550, freeContainer: true, keywords: ["вода", "1l"] },
+      { id: 169, category: "Напитки", name: "Мин. вода Alex 1.5L", price: 600, freeContainer: true, keywords: ["вода", "минералка", "alex"] },
+
+      // НАПИТКИ - ЛИМОНАДЫ
+      { id: 170, category: "Напитки", name: "Лимонад Киви 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "киви", "0.5"] },
+      { id: 171, category: "Напитки", name: "Лимонад Киви 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "киви", "1l"] },
+      { id: 172, category: "Напитки", name: "Лимонад Манго-маракуйя 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "манго", "маракуйя", "0.5"] },
+      { id: 173, category: "Напитки", name: "Лимонад Манго-маракуйя 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "манго", "маракуйя", "1l"] },
+      { id: 174, category: "Напитки", name: "Лимонад Апельсин 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "апельсин", "0.5"] },
+      { id: 175, category: "Напитки", name: "Лимонад Апельсин 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "апельсин", "1l"] },
+      { id: 176, category: "Напитки", name: "Лимонад Мохито 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "мохито", "0.5"] },
+      { id: 177, category: "Напитки", name: "Лимонад Мохито 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "мохито", "1l"] },
+      { id: 178, category: "Напитки", name: "Лимонад Киви-яблоко 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "киви", "яблоко", "0.5"] },
+      { id: 179, category: "Напитки", name: "Лимонад Киви-яблоко 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "киви", "яблоко", "1l"] },
+      { id: 180, category: "Напитки", name: "Лимонад Тархун 0.5L", price: 1100, freeContainer: true, keywords: ["лимонад", "тархун", "0.5"] },
+      { id: 181, category: "Напитки", name: "Лимонад Тархун 1L", price: 2200, freeContainer: true, keywords: ["лимонад", "тархун", "1l"] }
+    ];
+
+    function renderCategories() {
+      const categories = ["Все", ...new Set(products.map(p => p.category))];
+      const container = document.getElementById('categoryList');
+      container.innerHTML = categories.map(cat => `
+        <button class="cat-btn ${cat === activeCategory ? 'active' : ''}" onclick="selectCategory('${cat}')">${cat}</button>
+      `).join('');
+    }
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearchBtn').style.display = 'none';
+      renderCategories();
+      renderMenu();
+    }
+
+    function renderMenu(items = null) {
+      const menuContainer = document.getElementById('menu');
+      let list = items;
+
+      if (!list) {
+        list = activeCategory === "Все" 
+          ? products 
+          : products.filter(p => p.category === activeCategory);
+      }
+
+      if (list.length === 0) {
+        menuContainer.innerHTML = `<div style="text-align:center; color: var(--text-gray); padding: 40px 0;">Ничего не найдено</div>`;
+        return;
+      }
+
+      menuContainer.innerHTML = list.map(item => {
+        const qty = cart[item.id] || 0;
+        return `
+          <div class="menu-item">
+            <div class="item-info">
+              <div class="item-category-tag">${item.category}</div>
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">${item.price} ₸</div>
+            </div>
+            <div>
+              ${qty === 0 ? `
+                <button class="btn-add" onclick="changeQty(${item.id}, 1)">+ Добавить</button>
+              ` : `
+                <div class="counter">
+                  <button class="btn-cnt" onclick="changeQty(${item.id}, -1)">-</button>
+                  <span style="font-weight: bold; font-size: 14px;">${qty}</span>
+                  <button class="btn-cnt" onclick="changeQty(${item.id}, 1)">+</button>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const clearBtn = document.getElementById('clearSearchBtn');
+
+      if (query.length > 0) {
+        clearBtn.style.display = 'flex';
+        const filtered = products.filter(p => {
+          const matchName = p.name.toLowerCase().includes(query);
+          const matchCategory = p.category.toLowerCase().includes(query);
+          const matchKeywords = p.keywords && p.keywords.some(k => k.toLowerCase().includes(query));
+          return matchName || matchCategory || matchKeywords;
+        });
+        renderMenu(filtered);
+      } else {
+        clearBtn.style.display = 'none';
+        renderMenu();
+      }
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearchBtn').style.display = 'none';
+      renderMenu();
+    }
+
+    function changeQty(id, delta) {
+      cart[id] = (cart[id] || 0) + delta;
+      if (cart[id] <= 0) delete cart[id];
+      
+      const query = document.getElementById('searchInput').value.trim();
+      if (query.length > 0) {
+        handleSearch();
+      } else {
+        renderMenu();
+      }
+      
+      updateBottomBar();
+    }
+
+    function updateBottomBar() {
+      const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+      const bottomBar = document.getElementById('bottomBar');
+
+      if (totalItems > 0) {
+        bottomBar.style.display = 'flex';
+        document.getElementById('cartCount').innerText = totalItems;
+        
+        let subtotal = 0;
+        let containerCount = 0;
+
+        Object.keys(cart).forEach(id => {
+          const item = products.find(p => p.id == id);
+          const qty = cart[id];
+          subtotal += item.price * qty;
+          if (!item.freeContainer) {
+            containerCount += qty;
+          }
+        });
+
+        const containerTotal = containerCount * CONTAINER_PRICE;
+        const grandTotal = subtotal + containerTotal;
+
+        document.getElementById('cartTotal').innerText = `${grandTotal} ₸`;
+      } else {
+        bottomBar.style.display = 'none';
+      }
+    }
+
+    function openCart() {
+      const modal = document.getElementById('cartModal');
+      const cartList = document.getElementById('cartList');
+      const containerFeeNote = document.getElementById('containerFeeNote');
+      
+      let html = '';
+      let subtotal = 0;
+      let containerCount = 0;
+
+      Object.keys(cart).forEach(id => {
+        const item = products.find(p => p.id == id);
+        const qty = cart[id];
+        const itemSum = item.price * qty;
+        subtotal += itemSum;
+
+        if (!item.freeContainer) {
+          containerCount += qty;
+        }
+
+        html += `
+          <div class="cart-item">
+            <div>
+              <div style="font-weight: 600; font-size: 14px;">${item.name}</div>
+              <div style="font-size: 12px; color: var(--text-gray);">${item.price} ₸ × ${qty} = ${itemSum} ₸</div>
+            </div>
+            <div class="counter">
+              <button class="btn-cnt" onclick="changeQtyCart(${id}, -1)">-</button>
+              <span style="font-weight: bold; font-size: 14px;">${qty}</span>
+              <button class="btn-cnt" onclick="changeQtyCart(${id}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      });
+
+      const containerTotal = containerCount * CONTAINER_PRICE;
+      const grandTotal = subtotal + containerTotal;
+
+      cartList.innerHTML = html;
+      
+      if (containerCount > 0) {
+        containerFeeNote.innerText = `+ Контейнеры (${containerCount} шт × ${CONTAINER_PRICE} ₸ = ${containerTotal} ₸)`;
+      } else {
+        containerFeeNote.innerText = '';
+      }
+
+      document.getElementById('cartModalTotal').innerText = `Итого: ${grandTotal} ₸`;
+      
+      document.getElementById('modalStep1').style.display = 'block';
+      document.getElementById('modalStep2').style.display = 'none';
+      modal.style.display = 'flex';
+    }
+
+    function changeQtyCart(id, delta) {
+      changeQty(id, delta);
+      if (Object.keys(cart).length === 0) {
+        closeCart();
+      } else {
+        openCart();
+      }
+    }
+
+    function clearCart() {
+      cart = {};
+      updateBottomBar();
+      renderMenu();
+      closeCart();
+    }
+
+    function closeCart() {
+      document.getElementById('cartModal').style.display = 'none';
+    }
+
+    function goToCheckout() {
+      document.getElementById('modalStep1').style.display = 'none';
+      document.getElementById('modalStep2').style.display = 'block';
+    }
+
+    function backToCart() {
+      document.getElementById('modalStep1').style.display = 'block';
+      document.getElementById('modalStep2').style.display = 'none';
+    }
+
+    function sendToWhatsApp() {
+      const street = document.getElementById('street').value.trim();
+      const flat = document.getElementById('flat').value.trim();
+      const floor = document.getElementById('floor').value.trim();
+      const comment = document.getElementById('comment').value.trim();
+
+      if (!street || !flat || !floor) {
+        alert("Пожалуйста, заполните обязательные поля адреса (Улица, Квартира, Этаж)");
+        return;
+      }
+
+      let text = "🍽️ *НОВЫЙ ЗАКАЗ (ADAL-AS)*\n\n";
+      let subtotal = 0;
+      let containerCount = 0;
+
+      Object.keys(cart).forEach(id => {
+        const item = products.find(p => p.id == id);
+        const qty = cart[id];
+        const itemSum = item.price * qty;
+        subtotal += itemSum;
+
+        if (!item.freeContainer) {
+          containerCount += qty;
+        }
+
+        text += `• ${item.name} — ${qty} шт. (${itemSum} ₸)\n`;
+      });
+
+      const containerTotal = containerCount * CONTAINER_PRICE;
+      const grandTotal = subtotal + containerTotal;
+
+      text += `\n📦 *Контейнеры:* ${containerCount} шт. (${containerTotal} ₸)`;
+      text += `\n💰 *ИТОГО К ОПЛАТЕ:* ${grandTotal} ₸\n\n`;
+
+      text += `📍 *Адрес доставки:*\n`;
+      text += `• Улица, дом: ${street}\n`;
+      text += `• Квартира/офис: ${flat}\n`;
+      text += `• Этаж: ${floor}\n`;
+      
+      if (comment) {
+        text += `💬 *Комментарий:* ${comment}\n`;
+      }
+
+      const encodedText = encodeURIComponent(text);
+      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
+    }
+  </script>
+</body>
+</html>
